@@ -147,4 +147,4 @@ pip install -r requirements.txt
 
 ## Auteur
 
-**Fatima-Zahra** — Formation Data Analyst 2025-2026
+**Fatima-Zahra FRINDOU** — Formation Data Analyst, session avril 2026
