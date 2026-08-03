@@ -135,13 +135,30 @@ pip install -r requirements.txt
 
 ## Décisions de design Power BI
 
-> *Cette section sera complétée à l'issue de la construction du dashboard.*
+**Modèle de données** : schéma en étoile (1 table de faits + 3 dimensions : Dim_Date, Dim_Produit, Dim_Client), pour des performances optimales et l'accès à l'intelligence temporelle (comparaisons vs N-1).
+
+**Convention de nommage** : la table de faits garde ses noms de colonnes en anglais (fidélité à la source BigQuery/CSV, traçabilité) ; les dimensions construites sont en français (lisibilité pour un public métier non technique).
+
+**Code couleur cohérent** : bleu pour le chiffre d'affaires, vert pour la marge et les signaux positifs, rouge/orange pour le taux de retour et les points de vigilance — appliqué sur les 4 pages du dashboard.
+
+**Filtres Top N** : appliqués sur les visuels à forte cardinalité (658 marques, nombreuses villes) pour garantir la lisibilité, recalculés dynamiquement selon l'année sélectionnée.
+
+**Seuil de fiabilité statistique** : un filtre sur le volume minimum (≥10 lignes) a été appliqué aux analyses de taux de retour par catégorie, pour exclure les catégories dont l'échantillon est trop faible pour un résultat représentatif.
+
+**Choix du graphique villes plutôt qu'une carte** : le visuel carte de Power BI nécessite des coordonnées de latitude/longitude non disponibles dans les données ; un graphique en barres du Top 10 des villes a été retenu comme alternative tout aussi lisible.
+
+**Indicateurs d'évolution vs N-1** : mesures DAX utilisant `SAMEPERIODLASTYEAR`, avec gestion des cas limites (division par zéro, absence de donnée de comparaison pour 2023).
 
 ---
 
 ## Principaux enseignements
 
-> *Cette section sera complétée à l'issue de l'analyse.*
+- Le chiffre d'affaires et la marge progressent quasiment au même rythme (+101,3% et +99,6%) entre 2023 et 2024 : la croissance ne se fait pas au détriment de la rentabilité.
+- Cette croissance est portée par le volume de commandes plutôt que par le panier moyen (+6,1% seulement) : l'activité augmente, la fidélisation reste à développer (taux de réachat 3,4% en 2024).
+- Le catalogue est très fragmenté (658 marques pour 1 573 produits) : aucune marque ne domine, la croissance résulte d'une dynamique globale plutôt que d'un produit phare.
+- Le taux de retour baisse de 7,4 points sur la période, mais certaines catégories (Blazers & Jackets, Suits) concentrent l'essentiel des retours (~48%), un point de vigilance ciblé.
+- La ville de Lyon, 2ᵉ ville de France, reste sous-représentée dans le chiffre d'affaires par rapport à son potentiel démographique.
+- Un écart de volume de données a été observé entre le CSV fourni (1 679 lignes) et la reconstruction directe sur BigQuery (1 251 lignes), expliqué par une méthode de jointure plus stricte (INNER JOIN) ; les ratios (panier moyen, taux de retour) restent stables, confirmant que la logique de calcul est correcte.
 
 ---
 
